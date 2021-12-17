@@ -114,6 +114,7 @@ function secaoDeCompras() {
   }
   menu()
 }
+secaoDeCompras()
 //Seção de Compras
 // function preCompra(valorProduto, itemQuantidade, i, item) {
 //   totalProdutos = valorProduto * itemQuantidade
