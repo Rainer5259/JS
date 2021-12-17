@@ -1,129 +1,198 @@
-function loja() {
-  let saldoUsuario = 500,
-    saldoPosCompra = 0,
-    valorTotalDosProdutos = 0,
-    qntd_processador = 0,
-    qntd_ram = 0,
-    qntd_placaMae = 0,
-    totalDeProdutos = 0
-
-  var produtos = [
-    {
-      processador: 'Processador',
-      estoque: 27,
-      valor: 650
-    },
-    {
-      ram: 'Ram',
-      estoque: 52,
-      valor: 125
-    },
-    {
-      placa_mae: 'Placa-Mãe',
-      estoque: 325,
-      valor: 132
-    }
-  ]
-
-  function carrinho(
-    valorDoProduto,
-    quantidadeDeItens,
-    disponivel,
-    tipoDeItemSelecionado
-  ) {
-    valorTotalDosProdutos = valorDoProduto * quantidadeDeItens
-    saldoPosCompra = saldoUsuario - valorTotalDosProdutos
-    produtos[disponivel].estoque =
-      produtos[disponivel].estoque - quantidadeDeItens
-
-    console.log('Quantidade de:', tipoDeItemSelecionado, quantidadeDeItens)
+let saldoUsuario = 500,
+  totalProdutos = 0
+const catalogo = [
+  '////////CANTINHO DO HARDWARE - STORE////////\n' +
+    '1 - Hardware\n' +
+    '-----------------------\n' +
+    '2 - Remover item do carrinho\n' +
+    '3 - Finalizar compra\n' +
+    '4 - Ver carrinho\n' +
+    '5 - Sair sem comprar'
+]
+const hardwareCatalogo = [
+  'Escolha o produto desejado:\n' +
+    '1 - Processador\n' +
+    '2 - RAM\n' +
+    '3 - Placa-Mãe\n'
+]
+const produtos = [
+  {}, //PARA ARRAY "COMEÇAR" EM 1. MELHOR FORMA? //#REVISAR#
+  {
+    item: 'Processador',
+    estoque: 27,
+    valor: 650
+  },
+  {
+    item: 'Ram',
+    estoque: 52,
+    valor: 125
+  },
+  {
+    item: 'Placa-Mãe',
+    estoque: 325,
+    valor: 132
   }
-
-  function produtoDisponivel(tipoDeItemSelecionado, i) {
-    console.log(
-      'Quantidade de',
-      tipoDeItemSelecionado,
-      'em estoque:',
-      produtos[i].estoque
-    )
-  }
-  function posCompra() {
-    if (saldoPosCompra >= 0) {
-      return console.log(
-        'Produtos Disponíveis: ',
-        produtos,
-        '\n',
-        'Meu saldo:',
-        saldoPosCompra
+]
+let carrinho = [{}]
+mostrarCarrinho = () => console.log(carrinho)
+removerItem = () => {
+  if (carrinho.length == 0) {
+    console.error('O carrinho está vazio.'),
+      alert(
+        'Não há itens no carrinho. Não pode remover o que não existe.\n"OK" - retornar ao Menu Principal'
       )
-    } else {
-      return console.log('Limite excedido!')
-    }
+    return menu()
   }
-  function comprar() {
-    let menu = prompt(
-      'Escolha o produto desejado:\n 1 - Processador \n 2 - RAM \n 3 - Placa-Mãe \n 4 - Finalizar compra \n 5 - Sair'
-    )
-    switch (menu <= valorTotalDosProdutos) {
-      case '1': {
-        produtoDisponivel('Processador', 0)
-        qntd_processador += parseInt(prompt('Digite a quantidade'))
-        carrinho(produtos[0].valor, qntd_processador, 0, 'Processador')
-        posCompra()
-        return comprar()
-        // console.log(produtos[0].disponivel)
-        // qtnd_processador += prompt('Digite a quantidade')
-        // const TemSaldo = verificaSaldo()
-        // return comprar()
-      }
-      case '2': {
-        produtoDisponivel('Memória', 1)
-        qntd_ram += parseInt(prompt('Digite a quantidade'))
-        carrinho(produtos[1].valor, qntd_ram, 1, 'Memória')
-        posCompra()
-        return comprar()
-      }
-      case '3': {
-        produtoDisponivel('Placa-Mãe', 2)
-        qntd_placaMae += parseInt(prompt('Digite a quantidade'))
-        carrinho(produtos[2].valor, qntd_placaMae, 2, 'Placa-Mãe')
-        posCompra()
-        return comprar()
-      }
-      case '4': {
-        totalDeProdutos = qntd_processador + qntd_ram + qntd_placaMae
-
-        console.log(
-          'Compra Finalizada.',
-          produtos,
-          'Quantidade de Itens:',
-          totalDeProdutos,
-          'Valor Total dos Produtos',
-          valorTotalDosProdutos,
-          'Saldo atual:',
-          saldoPosCompra
-        )
-        break
-      }
-      case '5': {
-        break
-      }
-      default: {
-        alert(
-          'Opção Inexistente!\nPor favor, escolha uma opção válida.\nDeseja retornar ao menu?\n 1 - Sim | 2 - Não'
-        )
-        let voltarAoMenuAnterior = prompt('Escolha a opção desejada')
-        switch (voltarAoMenuAnterior) {
-          case '1': {
-            comprar()
-          }
-          case '2': {
-            break
-          }
-        }
-      }
-    }
+  let i = parseInt(prompt('Insira o índice do Item (veja o log de eventos)')) //###VISUALIZAR O ÍNDICE NO LOG###
+  let count = parseInt(prompt('Quantidade'))
+  saldoUsuario += parseInt(carrinho[i].valor)
+  if (count > carrinho[i].quantidade) {
+    carrinho[i].quantidade = carrinho[i].quantidade
+    return console.log('Você está tentando remover mais do que tem')
   }
-  comprar()
+  carrinho.splice(i)
+  //carrinho[i].quantidade -= count
 }
-loja()
+input = () => {
+  let i = parseInt(prompt(hardwareCatalogo))
+  let quantidade = parseInt(prompt('Quantidade'))
+  let estoque = produtos[i].estoque
+  let item = produtos[i].item
+  let valor = produtos[i].valor
+  totalProdutos += valor * quantidade
+  if (i <= produtos.length && i <= estoque)
+    carrinho.push({ item, quantidade, estoque, valor })
+  estoque -= quantidade
+  return console.log(carrinho), menu()
+}
+finalizarCompra = () => {
+  if (saldoUsuario >= totalProdutos) {
+    saldoUsuario -= totalProdutos
+    return (
+      console.log(carrinho, 'Saldo:', saldoUsuario),
+      console.warn('Compra realizada com sucesso!')
+    )
+  }
+  return (
+    console.warn(
+      'Saldo insuficiente\n',
+      'Escolha/Remova itens que o valor total seja equivalento ao seu saldo.'
+    ),
+    mostrarCarrinho()
+  )
+}
+menu = () => {
+  let opcao = parseInt(prompt(catalogo))
+  while (opcao < 1 || opcao > 5) {
+    menu()
+  }
+  switch (opcao) {
+    case 1: {
+      input()
+      break
+    }
+    case 2: {
+      removerItem()
+      break
+    }
+    case 3: {
+      finalizarCompra()
+      break
+    }
+    case 4: {
+      mostrarCarrinho()
+    }
+    default: {
+      if (opcao === 5) {
+        console.log('Saiu da loja.')
+        break
+      }
+    }
+  }
+}
+menu()
+//Seção de Compras
+// function preCompra(valorProduto, itemQuantidade, i, item) {
+//   totalProdutos = valorProduto * itemQuantidade
+//   saldoAtual = saldoUsuario - totalProdutos
+//   produtos[i].estoque -= itemQuantidade
+//   console.log('Quantidade de ', item, itemQuantidade)
+// }
+//Encerra compra dentro das condições.
+// function finalizarCompra() {
+//   if (saldoAtual >= 0)
+//     return console.log(
+//       'Compra Finalizada. ',
+//       '\nQuantidade de Itens: ',
+//       mostrarCarrinho(),
+//       '\nValor Total dos Produtos: ',
+//       totalProdutos,
+//       '\nSaldo atual:',
+//       saldoAtual
+//     )
+//   return (
+//     console.log(
+//       'Saldo Insuficiente. Seu atual: ',
+//       saldoAtual,
+//       'Valor total dos produtos: ',
+//       totalProdutos,
+//       '\nRemova algum item',
+
+//       mostrarCarrinho()
+//     ),
+//     secaoDeCompras()
+//   )
+// }
+// function secaoDeCompras() {
+//   let menu = prompt(catalogo)
+//   switch (menu) {
+//     case '1': {
+//       produtoDisponivel(0)
+//       input('processador')
+//       preCompra(produtoValor(0), carrinho.processador, 0, 'Processador')
+//       return secaoDeCompras()
+//     }
+//     case '2': {
+//       produtoDisponivel(1)
+//       input('ram')
+//       preCompra(produtoValor(1), carrinho.ram, 1, 'Memória')
+//       return secaoDeCompras()
+//     }
+//     case '3': {
+//       produtoDisponivel(2)
+//       input('placaMae')
+//       preCompra(produtoValor(2), carrinho.placaMae, 2, 'Placa-Mãe')
+//       return secaoDeCompras()
+//     }
+//     case '4': {
+//       return finalizarCompra()
+//     }
+//     case '5': {
+//       mostrarCarrinho()
+//       let input = prompt('1 - Processador\n 2 - RAM\n 3 - Placa-Mãe')
+//       removerItem = deleteItem => {
+//         let item = parseInt(prompt('Quantidade à ser removida'))
+//         carrinho[deleteItem] -= item
+//       }
+//       switch (input) {
+//         case '1': {
+//           return removerItem('processador'), secaoDeCompras()
+//         }
+//         case '2': {
+//           removerItem('ram')
+//           return secaoDeCompras()
+//         }
+//         case '3': {
+//           return removerItem('placaMae'), secaoDeCompras()
+//         }
+//       }
+//     }
+//     case '6': {
+//       console.log(carrinho, saldoAtual)
+//     }
+//     case '7': {
+//       break
+//     }
+//   }
+// }
+// secaoDeCompras()
