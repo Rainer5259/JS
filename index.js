@@ -50,12 +50,13 @@ removerItem = () => {
     carrinho[i].quantidade = carrinho[i].quantidade
     return console.log('Você está tentando remover mais do que tem')
   }
-  carrinho.splice(i)
-  //carrinho[i].quantidade -= count
+  carrinho[i].quantidade -= count
+  if (carrinho[i].quantidade == 0) return carrinho.splice(i)
 }
 input = () => {
   let i = parseInt(prompt(hardwareCatalogo))
-  let quantidade = parseInt(prompt('Quantidade'))
+  let quantidade = 0
+  quantidade += parseInt(prompt('Quantidade'))
   let estoque = produtos[i].estoque
   let item = produtos[i].item
   let valor = produtos[i].valor
