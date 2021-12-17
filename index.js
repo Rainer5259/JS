@@ -51,7 +51,7 @@ removerItem = () => {
     return console.log('Você está tentando remover mais do que tem')
   }
   carrinho[i].quantidade -= count
-  if (carrinho[i].quantidade == 0) return carrinho.splice(i)
+  if (carrinho[i].quantidade == 0) carrinho.splice(i)
 }
 input = () => {
   let i = parseInt(prompt(hardwareCatalogo))
