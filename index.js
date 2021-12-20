@@ -36,15 +36,23 @@ const produtos = [
 let carrinho = [{}]
 mostrarCarrinho = () => console.log(carrinho)
 input = () => {
-  let i = parseInt(prompt(hardwareCatalogo))
-  let quantidade = parseInt(prompt('Quantidade'))
-  let item = produtos[i].item
-  let valor = produtos[i].valor
+  let i = parseInt(prompt(hardwareCatalogo)),
+    quantidade = parseInt(prompt('Quantidade')),
+    item = produtos[i].item,
+    valor = produtos[i].valor
   totalProdutos += valor * quantidade
-  if (i <= produtos.length && i <= produtos[i].estoque)
+  if (i <= produtos.length && quantidade <= produtos[i].estoque) {
     produtos[i].estoque -= quantidade
-  carrinho.push({ item, quantidade, valor })
-  return menu()
+    return carrinho.push({ item, quantidade, valor, totalProdutos }), menu()
+  }
+  return (
+    console.warn(
+      'Não temos essa quantidade deste item em estoque!\n',
+      'Estoque:',
+      produtos[i].estoque
+    ),
+    menu()
+  )
 }
 removerItem = () => {
   if (carrinho.length == 0) {
@@ -56,10 +64,10 @@ removerItem = () => {
   }
   let i = parseInt(prompt('Insira o índice do Item (veja o log de eventos)')) //###VISUALIZAR O ÍNDICE NO LOG###
   let count = parseInt(prompt('Quantidade'))
-  saldoUsuario += parseInt(carrinho[i].valor)
-  if (count > carrinho[i].quantidade) {
+  while (count > carrinho[i].quantidade) {
     carrinho[i].quantidade = carrinho[i].quantidade
-    return console.log('Você está tentando remover mais do que tem')
+    console.log('Você está tentando remover mais do que tem')
+    return removerItem()
   }
   for (let j = 1; j < produtos.length; j++) {
     if (produtos[j].item == carrinho[i].item) {
@@ -74,8 +82,11 @@ removerItem = () => {
       console.log('Carrinho:', carrinho, '\nProdutos:', produtos),
       menu()
     )
+
+  totalProdutos -= carrinho[i].valor * count
 }
 finalizarCompra = () => {
+  if (carrinho.length == 1) return console.error('Carrinho Vazio'), menu()
   if (saldoUsuario >= totalProdutos) {
     saldoUsuario -= totalProdutos
     return (
