@@ -55,19 +55,19 @@ input = () => {
   )
 }
 removerItem = () => {
-  if (carrinho.length == 0) {
+  let i = parseInt(prompt('Insira o índice do Item (veja o log de eventos)')) //###VISUALIZAR O ÍNDICE NO LOG###
+  if (carrinho.length == 0 || !carrinho[i]) {
     console.error('O carrinho está vazio.'),
       alert(
         'Não há itens no carrinho. Não pode remover o que não existe.\n"OK" - retornar ao Menu Principal'
       )
     return menu()
   }
-  let i = parseInt(prompt('Insira o índice do Item (veja o log de eventos)')) //###VISUALIZAR O ÍNDICE NO LOG###
   let count = parseInt(prompt('Quantidade'))
   while (count > carrinho[i].quantidade) {
     carrinho[i].quantidade = carrinho[i].quantidade
-    console.log('Você está tentando remover mais do que tem')
-    return removerItem()
+    console.log('Você está tentando remover mais do que tem', carrinho[i])
+    count = parseInt(prompt('Quantidade'))
   }
   for (let j = 1; j < produtos.length; j++) {
     if (produtos[j].item == carrinho[i].item) {
