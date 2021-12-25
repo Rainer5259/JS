@@ -36,44 +36,30 @@ const produtos = [
 let carrinho = [{}]
 mostrarCarrinho = () => console.log(carrinho)
 input = () => {
-  for (let i = 0; i < carrinho.length; i) {
-    let i = parseInt(prompt(hardwareCatalogo)),
-      quantidade = parseInt(prompt('Quantidade')),
-      item = produtos[i].item,
-      valor = produtos[i].valor
-    totalProdutos += valor * quantidade
-    if (carrinho[i]) {
-      for (let j = 1; i < produtos.length; j++) {
-        if (produtos[j].item == carrinho[i].item) {
-          return (carrinho[i].quantidade += quantidade), menu()
-        }
-      }
+  let i = parseInt(prompt(hardwareCatalogo)),
+    quantidade = parseInt(prompt('Quantidade')),
+    item = produtos[i].item,
+    estoque = produtos[i].estoque,
+    valor = produtos[i].valor
+  totalProdutos += valor * quantidade
+  if (i > produtos.length || quantidade > estoque) return console.log(false)
+  for (let i = 1; i < carrinho.length; i++) {
+    if (carrinho[i].item == item) {
+      carrinho[i].quantidade += quantidade
+      estoque -= quantidade
+      return menu(), console.log('Total (R$):', totalProdutos)
     }
-    if (i <= produtos.length && quantidade <= produtos[i].estoque) {
-      produtos[i].estoque -= quantidade
-      return (
-        carrinho.push({ item, quantidade, valor }),
-        menu(),
-        console.log(totalProdutos)
-      )
-    }
-
-    return (
-      console.warn(
-        'Não temos essa quantidade deste item em estoque!\n',
-        'Estoque:',
-        produtos[i].estoque
-      ),
-      menu()
-    )
   }
+  carrinho.push({ item, quantidade, valor })
+  estoque -= quantidade
+  return menu(), console.log('Total (R$):', totalProdutos)
 }
 removerItem = () => {
-  let i = parseInt(prompt('Insira o índice do Item (veja o log de eventos)')) //###VISUALIZAR O ÍNDICE NO LOG###
+  let i = parseInt(prompt('Insira o índice do Item (veja o log)')) //###VISUALIZAR O ÍNDICE NO LOG###
   if (carrinho.length == 0 || !carrinho[i]) {
     console.error('O carrinho está vazio.'),
       alert(
-        'Não há itens no carrinho. Não pode remover o que não existe.\n"OK" - retornar ao Menu Principal'
+        'Vazio. Não pode remover o que não existe.\n"OK" - retornar ao Menu Principal'
       )
     return menu()
   }
@@ -83,12 +69,12 @@ removerItem = () => {
     console.log('Você está tentando remover mais do que tem', carrinho[i])
     count = parseInt(prompt('Quantidade'))
   }
-
   for (let j = 1; j < produtos.length; j++) {
     if (produtos[j].item == carrinho[i].item) {
       carrinho[i].quantidade -= count
       produtos[j].estoque += count
-      totalProdutos -= count * carrinho[i].valor
+      count *= carrinho[i].valor
+      totalProdutos -= count
     }
   }
   if (carrinho[i].quantidade == 0)
@@ -99,6 +85,7 @@ removerItem = () => {
     )
 }
 finalizarCompra = () => {
+  //carrinho.length == 1 porque começa com um array vazio
   if (carrinho.length == 1) return console.error('Carrinho Vazio'), menu()
   if (saldoUsuario >= totalProdutos) {
     saldoUsuario -= totalProdutos
