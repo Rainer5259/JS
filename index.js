@@ -42,7 +42,7 @@ input = () => {
     estoque = produtos[i].estoque,
     valor = produtos[i].valor
   totalProdutos += valor * quantidade
-  if (i > produtos.length || quantidade > estoque) return console.log(false)
+  if (quantidade > estoque) return console.log('Estoque disponível:', estoque)
   for (let i = 1; i < carrinho.length; i++) {
     if (carrinho[i].item == item) {
       carrinho[i].quantidade += quantidade
@@ -56,13 +56,7 @@ input = () => {
 }
 removerItem = () => {
   let i = parseInt(prompt('Insira o índice do Item (veja o log)')) //###VISUALIZAR O ÍNDICE NO LOG###
-  if (carrinho.length == 0 || !carrinho[i]) {
-    console.error('O carrinho está vazio.'),
-      alert(
-        'Vazio. Não pode remover o que não existe.\n"OK" - retornar ao Menu Principal'
-      )
-    return menu()
-  }
+  if (!carrinho[i]) return menu(), console.error('Vazio.')
   let count = parseInt(prompt('Quantidade'))
   while (count > carrinho[i].quantidade) {
     carrinho[i].quantidade = carrinho[i].quantidade
@@ -94,19 +88,11 @@ finalizarCompra = () => {
       console.warn('Compra realizada com sucesso!')
     )
   }
-  return (
-    console.warn(
-      'Saldo insuficiente\n',
-      'Escolha/Remova itens que o valor total seja equivalento ao seu saldo.'
-    ),
-    mostrarCarrinho()
-  )
+  return console.warn('Saldo insuficiente.'), mostrarCarrinho()
 }
 menu = () => {
   let opcao = parseInt(prompt(catalogo))
-  while (opcao < 1 || opcao > 5) {
-    menu()
-  }
+  while (opcao < 1 || opcao > 5) return console.log('Opção inexistente'), menu()
   switch (opcao) {
     case 1: {
       input()
