@@ -35,6 +35,7 @@ const produtos = [
 ]
 let carrinho = [{}]
 mostrarCarrinho = () => console.log(carrinho)
+console.log(saldoUsuario)
 input = () => {
   let i = parseInt(prompt(hardwareCatalogo)),
     quantidade = parseInt(prompt('Quantidade')),
@@ -54,14 +55,17 @@ input = () => {
   estoque -= quantidade
   return menu(), console.log('Total (R$):', totalProdutos)
 }
+
 removerItem = () => {
   let i = parseInt(prompt('Insira o índice do Item (veja o log)')) //###VISUALIZAR O ÍNDICE NO LOG###
   if (!carrinho[i]) return menu(), console.error('Vazio.')
   let count = parseInt(prompt('Quantidade'))
-  while (count > carrinho[i].quantidade) {
+  if (count > carrinho[i].quantidade) {
     carrinho[i].quantidade = carrinho[i].quantidade
-    console.log('Você está tentando remover mais do que tem', carrinho[i])
-    count = parseInt(prompt('Quantidade'))
+    return (
+      console.log('Você está tentando remover mais do que tem', carrinho[i]),
+      (count = parseInt(prompt('Quantidade')))
+    )
   }
   for (let j = 1; j < produtos.length; j++) {
     if (produtos[j].item == carrinho[i].item) {
@@ -78,6 +82,7 @@ removerItem = () => {
       menu()
     )
 }
+
 finalizarCompra = () => {
   //carrinho.length == 1 porque começa com um array vazio
   if (carrinho.length == 1) return console.error('Carrinho Vazio'), menu()
@@ -90,6 +95,7 @@ finalizarCompra = () => {
   }
   return console.warn('Saldo insuficiente.'), mostrarCarrinho()
 }
+
 menu = () => {
   let opcao = parseInt(prompt(catalogo))
   while (opcao < 1 || opcao > 5) return console.log('Opção inexistente'), menu()
