@@ -1,129 +1,141 @@
-let saldoUsuario = 500,
-  totalProdutos = 0
-const catalogo = [
-  '////////CANTINHO DO HARDWARE - STORE////////\n' +
-    '1 - Hardware\n' +
-    '-----------------------\n' +
-    '2 - Remover item do carrinho\n' +
-    '3 - Finalizar compra\n' +
-    '4 - Ver carrinho\n' +
-    '5 - Sair sem comprar'
-]
-const hardwareCatalogo = [
-  'Escolha o produto desejado:\n' +
-    '1 - Processador\n' +
-    '2 - RAM\n' +
-    '3 - Placa-Mãe\n'
-]
-const produtos = [
-  {}, //PARA ARRAY "COMEÇAR" EM 1. MELHOR FORMA? //#REVISAR#
-  {
-    item: 'Processador',
-    estoque: 27,
-    valor: 650
-  },
-  {
-    item: 'Ram',
-    estoque: 52,
-    valor: 125
-  },
-  {
-    item: 'Placa-Mãe',
-    estoque: 325,
-    valor: 132
-  }
-]
-let carrinho = [{}]
-mostrarCarrinho = () => console.log(carrinho)
-console.log(saldoUsuario)
-input = () => {
-  let i = parseInt(prompt(hardwareCatalogo)),
-    quantidade = parseInt(prompt('Quantidade')),
-    item = produtos[i].item,
-    estoque = produtos[i].estoque,
-    valor = produtos[i].valor
-  totalProdutos += valor * quantidade
-  if (quantidade > estoque) return console.log('Estoque disponível:', estoque)
-  for (let i = 1; i < carrinho.length; i++) {
-    if (carrinho[i].item == item) {
-      carrinho[i].quantidade += quantidade
-      estoque -= quantidade
-      return menu(), console.log('Total (R$):', totalProdutos)
-    }
-  }
-  carrinho.push({ item, quantidade, valor })
-  estoque -= quantidade
-  return menu(), console.log('Total (R$):', totalProdutos)
-}
+function loja() {
+  let saldoUsuario = 500,
+    totalProdutos = 0
+  console.log(saldoUsuario)
 
-removerItem = () => {
-  let i = parseInt(prompt('Insira o índice do Item (veja o log)')) //###VISUALIZAR O ÍNDICE NO LOG###
-  if (!carrinho[i]) return menu(), console.error('Vazio.')
-  let count = parseInt(prompt('Quantidade'))
-  if (count > carrinho[i].quantidade) {
-    carrinho[i].quantidade = carrinho[i].quantidade
+  const produtos = [
+    {}, //PARA ARRAY "COMEÇAR" EM 1. MELHOR FORMA? //#REVISAR#
+    {
+      item: 'Processador',
+      estoque: 27,
+      valor: 650
+    },
+    {
+      item: 'Ram',
+      estoque: 52,
+      valor: 125
+    },
+    {
+      item: 'Placa-Mãe',
+      estoque: 325,
+      valor: 132
+    }
+  ]
+  exibePreco = i => produtos[i].valor + '\n'
+  const catalogo = [
+    '////////CANTINHO DO HARDWARE - STORE////////\n' +
+      '1 - Hardware\n' +
+      '-----------------------\n' +
+      '2 - Remover item do carrinho\n' +
+      '3 - Finalizar compra\n' +
+      '4 - Ver carrinho\n' +
+      '5 - Sair sem comprar'
+  ]
+  const itemEPrecos = [
+    'Escolha o produto desejado:\n' +
+      '1 - Processador | R$: ' +
+      exibePreco(1) +
+      '2 - RAM | R$: ' +
+      exibePreco(2) +
+      '3 - Placa-Mãe | R$: ' +
+      exibePreco(3)
+  ]
+  let carrinho = [{}]
+  exibirSaldoUsuario = () => console.log(saldoUsuario)
+  exibirCarrinho = () => console.log(carrinho)
+  escolherItem = () => {
+    let i = parseInt(prompt(itemEPrecos)),
+      quantidade = parseInt(prompt('Quantidade')),
+      item = produtos[i].item,
+      estoque = produtos[i].estoque,
+      valor = produtos[i].valor
+    totalProdutos += valor * quantidade
+    while (i > produtos.length) return i
+    if (quantidade > estoque) return console.log('Estoque disponível:', estoque)
+    for (let i = 1; i < carrinho.length; i++) {
+      if (carrinho[i].item == item) {
+        carrinho[i].quantidade += quantidade
+        estoque -= quantidade
+        return exibirMenu(), console.log('Total (R$):', totalProdutos)
+      }
+    }
+    carrinho.push({ item, quantidade, valor })
+    estoque -= quantidade
+    return exibirMenu(), console.log('Total (R$):', totalProdutos)
+  }
+
+  removerItem = () => {
+    let i = parseInt(prompt('Insira o índice do Item (veja o log)')) //###VISUALIZAR O ÍNDICE NO LOG###
+    if (!carrinho[i]) return exibirMenu(), console.error('Vazio.')
+    let count = parseInt(prompt('Quantidade'))
+    if (count > carrinho[i].quantidade) {
+      carrinho[i].quantidade = carrinho[i].quantidade
+      return (
+        console.log('Você está tentando remover mais do que tem', carrinho[i]),
+        (count = parseInt(prompt('Quantidade')))
+      )
+    }
+    for (let j = 1; j < produtos.length; j++) {
+      if (produtos[j].item == carrinho[i].item) {
+        carrinho[i].quantidade -= count
+        produtos[j].estoque += count
+        count *= carrinho[i].valor
+        totalProdutos -= count
+      }
+    }
+    if (carrinho[i].quantidade == 0)
+      return carrinho.splice(i, 1), exibirCarrinho(), exibirMenu()
+  }
+
+  finalizarCompra = () => {
+    //carrinho.length == 1 porque começa com um array vazio
+    if (carrinho.length == 1)
+      return console.error('Carrinho Vazio'), exibirMenu()
+    if (saldoUsuario >= totalProdutos) {
+      saldoUsuario -= totalProdutos
+      return (
+        console.warn('Compra realizada'), exibirCarrinho(), exibirSaldoUsuario()
+      )
+    }
     return (
-      console.log('Você está tentando remover mais do que tem', carrinho[i]),
-      (count = parseInt(prompt('Quantidade')))
+      console.warn('Saldo insuficiente.'),
+      exibirCarrinho(),
+      exibirSaldoUsuario()
     )
   }
-  for (let j = 1; j < produtos.length; j++) {
-    if (produtos[j].item == carrinho[i].item) {
-      carrinho[i].quantidade -= count
-      produtos[j].estoque += count
-      count *= carrinho[i].valor
-      totalProdutos -= count
-    }
-  }
-  if (carrinho[i].quantidade == 0)
-    return (
-      carrinho.splice(i, 1),
-      console.log('Carrinho:', carrinho, '\nProdutos:', produtos),
-      menu()
-    )
-}
 
-finalizarCompra = () => {
-  //carrinho.length == 1 porque começa com um array vazio
-  if (carrinho.length == 1) return console.error('Carrinho Vazio'), menu()
-  if (saldoUsuario >= totalProdutos) {
-    saldoUsuario -= totalProdutos
-    return (
-      console.log(carrinho, 'Saldo:', saldoUsuario),
-      console.warn('Compra realizada com sucesso!')
-    )
-  }
-  return console.warn('Saldo insuficiente.'), mostrarCarrinho()
-}
+  exibirMenu = () => {
+    let opcao = parseInt(prompt(catalogo))
+    while (opcao < 1 || opcao > 5)
+      return console.log('Opção inexistente'), exibirMenu()
 
-menu = () => {
-  let opcao = parseInt(prompt(catalogo))
-  while (opcao < 1 || opcao > 5) return console.log('Opção inexistente'), menu()
-  switch (opcao) {
-    case 1: {
-      input()
-      break
-    }
-    case 2: {
-      removerItem()
-      break
-    }
-    case 3: {
-      finalizarCompra()
-      break
-    }
-    case 4: {
-      mostrarCarrinho()
-    }
-    default: {
-      if (opcao === 5) {
-        console.log('Saiu da loja.')
+    switch (opcao) {
+      case 1: {
+        escolherItem()
         break
+      }
+      case 2: {
+        removerItem()
+        break
+      }
+      case 3: {
+        finalizarCompra()
+        break
+      }
+      case 4: {
+        exibirCarrinho()
+      }
+      default: {
+        if (opcao === 5) {
+          console.log('Saiu da loja.')
+          break
+        }
       }
     }
   }
+  exibirMenu()
 }
-menu()
+loja()
 //Seção de Compras
 // function preCompra(valorProduto, itemQuantidade, i, item) {
 //   totalProdutos = valorProduto * itemQuantidade
