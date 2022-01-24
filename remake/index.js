@@ -1,9 +1,6 @@
-let saldoUsuario = 500,
-    totalProdutos = 0
-
-const produtos = [
-    //PARA ARRAY "COMEÇAR" EM 1. MELHOR FORMA? //#REVISAR#
-    {
+let saldoUsuario = 500
+let totalProdutos = 0
+const produtos = [{
         item: 'Processador',
         estoque: 27,
         valor: 650
@@ -32,40 +29,41 @@ const catalogo = [
 ]
 log = exibe => console.log(exibe)
 
-exibeItens = () => produtos.map((index, element) => log(element[index]))
+exibeItens = () =>
+    produtos.map(
+        (value, index) => '\n' + index + ' - ' + value.item + ' - R$:' + value.valor
+    )
 
 exibeSaldoUsuario = () => console.log('Seu saldo:', saldoUsuario)
 
 exibeCarrinho = () => {
     carrinho.map(value => {
-            console.log(
+            log(
                 '*-*-*-*-*-Carrinho-*-*-*-*-*',
                 '\nItem: ' + value.item,
                 '\nQuantidade: ' + value.quantidade,
-                '\nPreço: ' + value.valor
+                '\nPreço: ' + value.valor,
+                '\n\nTotal de produtos - R$:' + totalProdutos
             )
         }),
-        console.log('Total de produtos - R$:' + totalProdutos),
         exibeMenu()
 }
-exibeProdutos = () => '**PRODUTOS**' + produtos.map(elem => '\n' + elem.item + ' - R$:' + elem.valor)
 escolherItem = () => {
-    exibeItens()
-    let i = parseInt(prompt(exibeProdutos()))
+    let i = parseInt(prompt(exibeItens()))
     while (i > produtos.length) return exibeMenu()
     let quantidade = parseInt(prompt('Quantidade'))
-    let item = produtos[i].item,
-        valor = produtos[i].valor,
-        estoque = produtos[i].estoque
+    let item = produtos[i].item
+    let valor = produtos[i].valor
+    let estoque = produtos[i].estoque
     if (quantidade > estoque) return console.log('Estoque disponível:', estoque)
     totalProdutos += valor * quantidade
     for (i = 0; i < carrinho.length; i++) {
-        if (carrinho[i].item == item)
-            carrinho[i].quantidade += quantidade
-        estoque -= quantidade
-        return exibeMenu()
+        if (carrinho[i].item == item) carrinho[i].quantidade += quantidade
+        return (estoque -= quantidade), exibeMenu()
     }
-    carrinho.push({ item, valor, quantidade }), exibeMenu()
+    carrinho.push({ item, valor, quantidade })
+    estoque -= quantidade
+    return exibeMenu()
 }
 
 removerItem = () => {
