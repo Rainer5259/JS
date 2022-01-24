@@ -31,47 +31,42 @@ const catalogo = [
     '6 - Sair sem comprar'
 ]
 log = exibir => console.log(exibir)
-
-listaDeItens = () => produtos.map((index, element) => log(element[index]))
-exibirSaldoUsuario = () => console.log('Seu saldo:', saldoUsuario)
+const listaDeItens = produtos.map(
+    (value, index) => index + ': ' + value.item + ' - R$:' + value.valor
+)
+exibirSaldoUsuario = () => log('Seu saldo:', saldoUsuario)
 
 exibirCarrinho = () => {
     carrinho.map(array => {
             if (!carrinho.length) return console.error('Vazio!'), exibirMenu()
-            console.log(
+            log(
                 '*-*-*-*-*-Carrinho-*-*-*-*-*',
-                '\nItem: ' + array.item,
+                '\nItem:' + array.item,
                 '\nQuantidade: ' + array.quantidade,
-                '\nPreço: ' + array.valor
+                '\nPreço: ' + array.valor,
+                '\n\nTotal de produtos - R$:' + totalProdutos
             )
         }),
-        console.log('Total de produtos - R$:' + totalProdutos),
         exibirMenu()
 }
-show = () => produtos.map(elem => '\n' + elem.item + ' - R$:' + elem.valor)
 escolherItem = () => {
-    listaDeItens()
-    let i = parseInt(prompt(show()))
+    listaDeItens
+    let i = parseInt(prompt())
     while (i > produtos.length - 1) return exibirMenu()
     let quantidade = parseInt(prompt('Quantidade')),
         item = produtos[i].item,
         estoque = produtos[i].estoque,
         valor = produtos[i].valor
     totalProdutos += valor * quantidade
-    if (quantidade > estoque) return console.log('Estoque disponível:', estoque)
+    if (quantidade > estoque) return log('Estoque disponível:', estoque)
     for (let i = 1; i < carrinho.length; i++) {
-        if (carrinho[i].item == item) {
-            carrinho[i].quantidade += quantidade
-            estoque -= quantidade
-            return exibirMenu(), console.log('Total (R$):', totalProdutos)
+        if (carrinho[i].item == item) {;
+            (carrinho[i].quantidade += quantidade), (estoque -= quantidade)
+            return exibirMenu(), log('Total (R$):', totalProdutos)
         }
     }
-    carrinho.push({ item, quantidade, valor })
-    estoque -= quantidade
-    return (
-        console.log('Total (R$):', totalProdutos),
-        setTimeout(() => exibirMenu(), 300)
-    )
+    carrinho.push({ item, quantidade, valor }), (estoque -= quantidade)
+    return log('Total (R$):', totalProdutos), setTimeout(() => exibirMenu(), 300)
 }
 
 removerItem = () => {
@@ -80,7 +75,7 @@ removerItem = () => {
     let quantidade = parseInt(prompt('Quantidade'))
     while (quantidade > carrinho[i].quantidade) {
         carrinho[i].quantidade = carrinho[i].quantidade
-        console.log('Você está tentando remover mais do que tem', carrinho[i]),
+        log('Você está tentando remover mais do que tem', carrinho[i]),
             (quantidade = parseInt(prompt('Quantidade')))
     }
     for (let j = 1; j < produtos.length; j++) {
@@ -112,8 +107,7 @@ finalizarCompra = () => {
 
 exibirMenu = () => {
     let opcao = parseInt(prompt(catalogo))
-    while (opcao < 1 || opcao > 5)
-        return console.log('Opção inexistente'), exibirMenu()
+    while (opcao < 1 || opcao > 5) return log('Opção inexistente'), exibirMenu()
     switch (opcao) {
         case 1:
             {
@@ -144,7 +138,7 @@ exibirMenu = () => {
         default:
             {
                 if (opcao === 6) {
-                    console.log('Saiu da loja.')
+                    log('Saiu da loja.')
                     break
                 }
             }
@@ -159,12 +153,12 @@ setTimeout(() => {
 //   totalProdutos = valorProduto * itemQuantidade
 //   saldoAtual = saldoUsuario - totalProdutos
 //   produtos[i].estoque -= itemQuantidade
-//   console.log('Quantidade de ', item, itemQuantidade)
+//   log('Quantidade de ', item, itemQuantidade)
 // }
 //Encerra compra dentro das condições.
 // function finalizarCompra() {
 //   if (saldoAtual >= 0)
-//     return console.log(
+//     return log(
 //       'Compra Finalizada. ',
 //       '\nQuantidade de Itens: ',
 //       mostrarCarrinho(),
@@ -174,7 +168,7 @@ setTimeout(() => {
 //       saldoAtual
 //     )
 //   return (
-//     console.log(
+//     log(
 //       'Saldo Insuficiente. Seu atual: ',
 //       saldoAtual,
 //       'Valor total dos produtos: ',
@@ -231,7 +225,7 @@ setTimeout(() => {
 //       }
 //     }
 //     case '6': {
-//       console.log(carrinho, saldoAtual)
+//       log(carrinho, saldoAtual)
 //     }
 //     case '7': {
 //       break
