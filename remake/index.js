@@ -29,10 +29,14 @@ const catalogo = [
 ]
 log = exibe => console.log(exibe)
 
-exibeItens = () =>
-    produtos.map(
-        (value, index) => '\n' + index + ' - ' + value.item + ' - R$:' + value.valor
-    )
+function exibeItens() {
+    let lista = document.getElementById('listaProdutos')
+    produtos.forEach(value => {
+        let li = document.createElement('li')
+        li.innerHTML = value.item
+        lista.appendChild(li)
+    })
+}
 
 exibeSaldoUsuario = () => console.log('Seu saldo:', saldoUsuario)
 
@@ -103,48 +107,48 @@ finalizarCompra = () => {
 }
 
 exibeMenu = () => {
-    let opcao = parseInt(prompt(catalogo))
-    while (opcao < 1 || opcao > 5)
-        return console.log('Opção inexistente'), exibeMenu()
-    switch (opcao) {
-        case 1:
-            {
-                escolherItem(carrinho)
-                break
-            }
-        case 2:
-            {
-                log(exibeProdutos())
-                break
-            }
-        case 3:
-            {
-                exibeCarrinho()
-                removerItem()
-                break
-            }
-        case 4:
-            {
-                finalizarCompra()
-                break
-            }
-        case 5:
-            {
-                exibeCarrinho()
-                break
-            }
-        default:
-            {
-                if (opcao === 6) {
-                    console.log('Saiu da loja.')
+        let opcao = parseInt(prompt(catalogo))
+        while (opcao < 1 || opcao > 5)
+            return console.log('Opção inexistente'), exibeMenu()
+        switch (opcao) {
+            case 1:
+                {
+                    escolherItem(carrinho)
                     break
                 }
-            }
+            case 2:
+                {
+                    log(exibeProdutos())
+                    break
+                }
+            case 3:
+                {
+                    exibeCarrinho()
+                    removerItem()
+                    break
+                }
+            case 4:
+                {
+                    finalizarCompra()
+                    break
+                }
+            case 5:
+                {
+                    exibeCarrinho()
+                    break
+                }
+            default:
+                {
+                    if (opcao === 6) {
+                        console.log('Saiu da loja.')
+                        break
+                    }
+                }
+        }
     }
-}
-setTimeout(() => {
-    exibeMenu()
-}, 1000)
+    // setTimeout(() => {
+    //     exibeMenu()
+    // }, 1000)
 
 //Seção de Compras
 // function preCompra(valorProduto, itemQuantidade, i, item) {
