@@ -30,11 +30,8 @@ const catalogo = [
 log = exibe => console.log(exibe)
 
 function exibeItens() {
-    let lista = document.getElementById('listaProdutos')
     produtos.forEach(value => {
-        let li = document.createElement('li')
-        li.innerHTML = value.item
-        lista.appendChild(li)
+        value.item
     })
 }
 
@@ -52,44 +49,43 @@ exibeCarrinho = () => {
         }),
         exibeMenu()
 }
-escolherItem = () => {
-    let i = parseInt(prompt(exibeItens()))
+escolherItem = (i, item, valor, estoque, quantidade) => {
     while (i > produtos.length) return exibeMenu()
-    let quantidade = parseInt(prompt('Quantidade'))
-    let item = produtos[i].item
-    let valor = produtos[i].valor
-    let estoque = produtos[i].estoque
+    quantidade = parseInt(prompt('Quantidade'))
+    item = produtos[i].item
+    valor = produtos[i].valor
+    estoque = produtos[i].estoque
     if (quantidade > estoque) return console.log('Estoque disponível:', estoque)
     totalProdutos += valor * quantidade
     for (i = 0; i < carrinho.length; i++) {
         if (carrinho[i].item == item) carrinho[i].quantidade += quantidade
         return (estoque -= quantidade), exibeMenu()
     }
-    carrinho.push({ item, valor, quantidade })
-    estoque -= quantidade
+    carrinho.push({ item, valor, quantidade }), (estoque -= quantidade)
     return exibeMenu()
 }
 
-removerItem = () => {
-    let i = parseInt(prompt('Insira o índice do Item (veja o log)')) //###VISUALIZAR O ÍNDICE NO LOG###
+removerItem = (i, carrinhoQuant, item) => {
+    //###VISUALIZAR O ÍNDICE NO LOG###
+    i = parseInt(prompt())
+    item = carrinho[i].item
+    carrinhoQuant = carrinho[i].quantidade
     if (!carrinho[i]) return exibeMenu(), console.error('Vazio.')
-    let quantidade = parseInt(prompt('Quantidade'))
-    while (quantidade > carrinho[i].quantidade) {
-        carrinho[i].quantidade = carrinho[i].quantidade
+    let itemQuant = parseInt(prompt('Quantidade'))
+    while (itemQuant > carrinhoQuant) {
+        carrinhoQuant = carrinhoQuant
         console.log('Você está tentando remover mais do que tem', carrinho[i]),
-            (quantidade = parseInt(prompt('Quantidade')))
+            (itemQuant = parseInt(prompt('Quantidade')))
     }
     for (let j = 1; j < produtos.length; j++) {
-        if (produtos[j].item == carrinho[i].item) {
-            carrinho[i].quantidade -= quantidade
-            produtos[j].estoque += quantidade
-            quantidade *= carrinho[i].valor
-            totalProdutos -= quantidade
+        if (produtos[j].item == item) {;
+            (carrinhoQuant -= itemQuant), (produtos[j].estoque += itemQuant);
+            (itemQuant *= carrinho[i].valor), (totalProdutos -= itemQuant)
         }
         setTimeout(() => exibeMenu(), 3000)
     }
     exibeCarrinho()
-    if (carrinho[i].quantidade == 0)
+    if (carrinhoQuant == 0)
         return carrinho.splice(i, 1), exibeCarrinho(), exibeMenu()
 }
 
@@ -107,48 +103,48 @@ finalizarCompra = () => {
 }
 
 exibeMenu = () => {
-        let opcao = parseInt(prompt(catalogo))
-        while (opcao < 1 || opcao > 5)
-            return console.log('Opção inexistente'), exibeMenu()
-        switch (opcao) {
-            case 1:
-                {
-                    escolherItem(carrinho)
+    let opcao = parseInt(prompt(catalogo))
+    while (opcao < 1 || opcao > 5)
+        return console.log('Opção inexistente'), exibeMenu()
+    switch (opcao) {
+        case 1:
+            {
+                escolherItem(parseInt(prompt(exibeItens())))
+                break
+            }
+        case 2:
+            {
+                log(exibeProdutos())
+                break
+            }
+        case 3:
+            {
+                exibeCarrinho()
+                removerItem(parseInt(prompt('Insira o índice do Item (veja o log)')))
+                break
+            }
+        case 4:
+            {
+                finalizarCompra()
+                break
+            }
+        case 5:
+            {
+                exibeCarrinho()
+                break
+            }
+        default:
+            {
+                if (opcao === 6) {
+                    console.log('Saiu da loja.')
                     break
                 }
-            case 2:
-                {
-                    log(exibeProdutos())
-                    break
-                }
-            case 3:
-                {
-                    exibeCarrinho()
-                    removerItem()
-                    break
-                }
-            case 4:
-                {
-                    finalizarCompra()
-                    break
-                }
-            case 5:
-                {
-                    exibeCarrinho()
-                    break
-                }
-            default:
-                {
-                    if (opcao === 6) {
-                        console.log('Saiu da loja.')
-                        break
-                    }
-                }
-        }
+            }
     }
-    // setTimeout(() => {
-    //     exibeMenu()
-    // }, 1000)
+}
+setTimeout(() => {
+    exibeMenu()
+}, 1000)
 
 //Seção de Compras
 // function preCompra(valorProduto, itemQuantidade, i, item) {
@@ -235,3 +231,10 @@ exibeMenu = () => {
 //   }
 // }
 // secaoDeCompras()
+var twoSum = function(nums, target) {;
+    (nums = [2, 11, 15, 7]), (target = 9)
+    nums.reduce((iteratee, currentValue) => {
+        if (iteratee + currentValue == target)
+            return console.log(iteratee, currentValue)
+    })
+}
