@@ -29,47 +29,19 @@ const catalogo = [
 ]
 log = exibe => console.log(exibe)
 
-<<<<<<< HEAD
 exibeItens = () => produtos.map(elem => '\n' + elem.item + 'R$:' + elem.valor)
-=======
-function exibeItens() {
-    produtos.forEach(value => {
-        value.item
-    })
-}
->>>>>>> 774ca118df75f6cd876aca72bf419604a25c86ff
 
 exibeSaldoUsuario = () => 'Seu saldo: R$' + saldoUsuario
 
-<<<<<<< HEAD
 exibeCarrinho = () => carrinho
 
 escolherItem = (i, item, estoque, valor, quantidade) => {
     i = parseInt(prompt(exibeItens()))
-=======
-exibeCarrinho = () => {
-    carrinho.map(value => {
-            log(
-                '*-*-*-*-*-Carrinho-*-*-*-*-*',
-                '\nItem: ' + value.item,
-                '\nQuantidade: ' + value.quantidade,
-                '\nPreço: ' + value.valor,
-                '\n\nTotal de produtos - R$:' + totalProdutos
-            )
-        }),
-        exibeMenu()
-}
-escolherItem = (i, item, valor, estoque, quantidade) => {
->>>>>>> 774ca118df75f6cd876aca72bf419604a25c86ff
     while (i > produtos.length) return exibeMenu()
     quantidade = parseInt(prompt('Quantidade'))
     item = produtos[i].item
     valor = produtos[i].valor
     estoque = produtos[i].estoque
-<<<<<<< HEAD
-=======
-    if (quantidade > estoque) return console.log('Estoque disponível:', estoque)
->>>>>>> 774ca118df75f6cd876aca72bf419604a25c86ff
     totalProdutos += valor * quantidade
     if (quantidade > estoque) return console.log('Estoque disponível:', estoque)
     for (let i = 0; i < carrinho.length; i++) {
@@ -79,7 +51,6 @@ escolherItem = (i, item, valor, estoque, quantidade) => {
         }
     }
     carrinho.push({ item, valor, quantidade }), (estoque -= quantidade)
-<<<<<<< HEAD
     exibeMenu()
 }
 
@@ -97,36 +68,11 @@ removerItem = (i, quantidade, quantidadeCarrinho) => {
         if (produtos[j].item == carrinho[i].item) {;
             (quantidadeCarrinho -= quantidade), (produtos[j].estoque += quantidade);
             (quantidade *= carrinho[i].valor), (totalProdutos -= quantidade)
-=======
-    return exibeMenu()
-}
-
-removerItem = (i, carrinhoQuant, item) => {
-    //###VISUALIZAR O ÍNDICE NO LOG###
-    i = parseInt(prompt())
-    item = carrinho[i].item
-    carrinhoQuant = carrinho[i].quantidade
-    if (!carrinho[i]) return exibeMenu(), console.error('Vazio.')
-    let itemQuant = parseInt(prompt('Quantidade'))
-    while (itemQuant > carrinhoQuant) {
-        carrinhoQuant = carrinhoQuant
-        console.log('Você está tentando remover mais do que tem', carrinho[i]),
-            (itemQuant = parseInt(prompt('Quantidade')))
-    }
-    for (let j = 1; j < produtos.length; j++) {
-        if (produtos[j].item == item) {;
-            (carrinhoQuant -= itemQuant), (produtos[j].estoque += itemQuant);
-            (itemQuant *= carrinho[i].valor), (totalProdutos -= itemQuant)
->>>>>>> 774ca118df75f6cd876aca72bf419604a25c86ff
         }
         setTimeout(() => exibeMenu(), 3000)
     }
     exibeCarrinho()
-<<<<<<< HEAD
     if (quantidadeCarrinho == 0)
-=======
-    if (carrinhoQuant == 0)
->>>>>>> 774ca118df75f6cd876aca72bf419604a25c86ff
         return carrinho.splice(i, 1), exibeCarrinho(), exibeMenu()
 }
 
@@ -145,11 +91,7 @@ exibeMenu = () => {
     switch (opcao) {
         case 1:
             {
-<<<<<<< HEAD
                 escolherItem(carrinho)
-=======
-                escolherItem(parseInt(prompt(exibeItens())))
->>>>>>> 774ca118df75f6cd876aca72bf419604a25c86ff
                 break
             }
         case 2:
@@ -160,20 +102,12 @@ exibeMenu = () => {
         case 3:
             {
                 exibeCarrinho()
-<<<<<<< HEAD
                 removerItem()
-=======
-                removerItem(parseInt(prompt('Insira o índice do Item (veja o log)')))
->>>>>>> 774ca118df75f6cd876aca72bf419604a25c86ff
                 break
             }
         case 4:
             {
-<<<<<<< HEAD
                 finalizarCompra(saldoUsuario, totalProdutos)
-=======
-                finalizarCompra()
->>>>>>> 774ca118df75f6cd876aca72bf419604a25c86ff
                 break
             }
         case 5:
@@ -192,11 +126,7 @@ exibeMenu = () => {
 }
 setTimeout(() => {
     exibeMenu()
-<<<<<<< HEAD
 }, 1500)
-=======
-}, 1000)
->>>>>>> 774ca118df75f6cd876aca72bf419604a25c86ff
 
 //Seção de Compras
 // function preCompra(valorProduto, itemQuantidade, i, item) {
@@ -283,10 +213,3 @@ setTimeout(() => {
 //   }
 // }
 // secaoDeCompras()
-var twoSum = function(nums, target) {;
-    (nums = [2, 11, 15, 7]), (target = 9)
-    nums.reduce((iteratee, currentValue) => {
-        if (iteratee + currentValue == target)
-            return console.log(iteratee, currentValue)
-    })
-}
