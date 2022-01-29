@@ -36,19 +36,18 @@ listaDeItens = () => produtos.map((index, element) => log(element[index]))
 exibirSaldoUsuario = () => console.log('Seu saldo:', saldoUsuario)
 
 exibirCarrinho = () => {
-    carrinho.map(array => {
+    carrinho.map(value => {
             if (!carrinho.length) return console.error('Vazio!'), exibirMenu()
             console.log(
-                '*-*-*-*-*-Carrinho-*-*-*-*-*',
-                '\nItem: ' + array.item,
-                '\nQuantidade: ' + array.quantidade,
-                '\nPreço: ' + array.valor
+                '*-*-*-*-*-Carrinho-*-*-*-*-*\n' + value.item,
+                '\nQuantidade: ' + value.quantidade,
+                '\nPreço: ' + value.valor
             )
         }),
         console.log('Total de produtos - R$:' + totalProdutos),
         exibirMenu()
 }
-show = () => produtos.map(elem => '\n' + elem.item + ' - R$:' + elem.valor)
+show = () => produtos.map(elem => '\n' + elem.item + +elem.valor)
 escolherItem = () => {
     listaDeItens()
     let i = parseInt(prompt(show()))

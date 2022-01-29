@@ -29,126 +29,104 @@ const catalogo = [
 ]
 log = exibe => console.log(exibe)
 
-function exibeItens() {
-    let lista = document.getElementById('listaProdutos')
-    produtos.forEach(value => {
-        let li = document.createElement('li')
-        li.innerHTML = value.item
-        lista.appendChild(li)
-    })
-}
+exibeItens = () => produtos.map(elem => '\n' + elem.item + 'R$:' + elem.valor)
 
-exibeSaldoUsuario = () => console.log('Seu saldo:', saldoUsuario)
+exibeSaldoUsuario = () => 'Seu saldo: R$' + saldoUsuario
 
-exibeCarrinho = () => {
-    carrinho.map(value => {
-            log(
-                '*-*-*-*-*-Carrinho-*-*-*-*-*',
-                '\nItem: ' + value.item,
-                '\nQuantidade: ' + value.quantidade,
-                '\nPreço: ' + value.valor,
-                '\n\nTotal de produtos - R$:' + totalProdutos
-            )
-        }),
-        exibeMenu()
-}
-escolherItem = () => {
-    let i = parseInt(prompt(exibeItens()))
+exibeCarrinho = () => carrinho
+
+escolherItem = (i, item, estoque, valor, quantidade) => {
+    i = parseInt(prompt(exibeItens()))
     while (i > produtos.length) return exibeMenu()
-    let quantidade = parseInt(prompt('Quantidade'))
-    let item = produtos[i].item
-    let valor = produtos[i].valor
-    let estoque = produtos[i].estoque
-    if (quantidade > estoque) return console.log('Estoque disponível:', estoque)
+    quantidade = parseInt(prompt('Quantidade'))
+    item = produtos[i].item
+    valor = produtos[i].valor
+    estoque = produtos[i].estoque
     totalProdutos += valor * quantidade
-    for (i = 0; i < carrinho.length; i++) {
-        if (carrinho[i].item == item) carrinho[i].quantidade += quantidade
-        return (estoque -= quantidade), exibeMenu()
+    if (quantidade > estoque) return console.log('Estoque disponível:', estoque)
+    for (let i = 0; i < carrinho.length; i++) {
+        if (carrinho[i].item == item) {;
+            (carrinho[i].quantidade += quantidade), (estoque -= quantidade)
+            return exibeMenu()
+        }
     }
-    carrinho.push({ item, valor, quantidade })
-    estoque -= quantidade
-    return exibeMenu()
+    carrinho.push({ item, valor, quantidade }), (estoque -= quantidade)
+    exibeMenu()
 }
 
-removerItem = () => {
-    let i = parseInt(prompt('Insira o índice do Item (veja o log)')) //###VISUALIZAR O ÍNDICE NO LOG###
+removerItem = (i, quantidade, quantidadeCarrinho) => {
+    i = parseInt(prompt('Insira o índice do Item (veja o log)')) //###VISUALIZAR O ÍNDICE NO LOG###
     if (!carrinho[i]) return exibeMenu(), console.error('Vazio.')
-    let quantidade = parseInt(prompt('Quantidade'))
-    while (quantidade > carrinho[i].quantidade) {
-        carrinho[i].quantidade = carrinho[i].quantidade
-        console.log('Você está tentando remover mais do que tem', carrinho[i]),
+    quantidade = parseInt(prompt('Quantidade'))
+    quantidadeCarrinho = carrinho[i].quantidade
+    while (quantidade > quantidadeCarrinho) {
+        quantidadeCarrinho = quantidadeCarrinho
+        log('Você está tentando remover mais do que tem', carrinho[i]),
             (quantidade = parseInt(prompt('Quantidade')))
     }
     for (let j = 1; j < produtos.length; j++) {
-        if (produtos[j].item == carrinho[i].item) {
-            carrinho[i].quantidade -= quantidade
-            produtos[j].estoque += quantidade
-            quantidade *= carrinho[i].valor
-            totalProdutos -= quantidade
+        if (produtos[j].item == carrinho[i].item) {;
+            (quantidadeCarrinho -= quantidade), (produtos[j].estoque += quantidade);
+            (quantidade *= carrinho[i].valor), (totalProdutos -= quantidade)
         }
         setTimeout(() => exibeMenu(), 3000)
     }
     exibeCarrinho()
-    if (carrinho[i].quantidade == 0)
+    if (quantidadeCarrinho == 0)
         return carrinho.splice(i, 1), exibeCarrinho(), exibeMenu()
 }
 
-finalizarCompra = () => {
-    if (carrinho.length == 1) return console.error('Carrinho Vazio'), exibeMenu()
-    if (saldoUsuario >= totalProdutos) {
-        saldoUsuario -= totalProdutos
-        return (
-            console.warn('Compra realizada'), exibeCarrinho(), exibeSaldoUsuario()
-        )
+finalizarCompra = (saldo, total) => {
+    if (saldo >= total) {
+        saldo -= total
+        return console.log('Compra realizada')
     }
-    return (
-        console.warn('Saldo insuficiente.'), exibeCarrinho(), exibeSaldoUsuario()
-    )
+    console.log('Saldo insuficiente.')
 }
 
 exibeMenu = () => {
-        let opcao = parseInt(prompt(catalogo))
-        while (opcao < 1 || opcao > 5)
-            return console.log('Opção inexistente'), exibeMenu()
-        switch (opcao) {
-            case 1:
-                {
-                    escolherItem(carrinho)
+    let opcao = parseInt(prompt(catalogo))
+    while (opcao < 1 || opcao > 5)
+        return console.log('Opção inexistente'), exibeMenu()
+    switch (opcao) {
+        case 1:
+            {
+                escolherItem(carrinho)
+                break
+            }
+        case 2:
+            {
+                log(exibeProdutos())
+                break
+            }
+        case 3:
+            {
+                exibeCarrinho()
+                removerItem()
+                break
+            }
+        case 4:
+            {
+                finalizarCompra(saldoUsuario, totalProdutos)
+                break
+            }
+        case 5:
+            {
+                exibeCarrinho()
+                break
+            }
+        default:
+            {
+                if (opcao === 6) {
+                    console.log('Saiu da loja.')
                     break
                 }
-            case 2:
-                {
-                    log(exibeProdutos())
-                    break
-                }
-            case 3:
-                {
-                    exibeCarrinho()
-                    removerItem()
-                    break
-                }
-            case 4:
-                {
-                    finalizarCompra()
-                    break
-                }
-            case 5:
-                {
-                    exibeCarrinho()
-                    break
-                }
-            default:
-                {
-                    if (opcao === 6) {
-                        console.log('Saiu da loja.')
-                        break
-                    }
-                }
-        }
+            }
     }
-    // setTimeout(() => {
-    //     exibeMenu()
-    // }, 1000)
+}
+setTimeout(() => {
+    exibeMenu()
+}, 1500)
 
 //Seção de Compras
 // function preCompra(valorProduto, itemQuantidade, i, item) {
