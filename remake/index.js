@@ -27,7 +27,6 @@ const catalogo = [
     '5 - Ver carrinho\n' +
     '6 - Sair sem comprar'
 ]
-log = exibe => console.log(exibe)
 
 exibeItens = () => produtos.map(value => `\n${value.item} - R$: ${value.valor}`)
 
@@ -43,7 +42,7 @@ escolherItem = (i, item, estoque, valor, quantidade) => {
     quantidade = parseInt(prompt('Quantidade'));
     (item = produtos[i].item), (valor = produtos[i].valor);
     (estoque = produtos[i].estoque), (totalProdutos += valor * quantidade)
-    if (quantidade > estoque) return console.log('Estoque disponível:', estoque)
+    if (quantidade > estoque) return alert('Estoque disponível:', estoque)
     for (let i = 0; i < carrinho.length; i++) {
         if (carrinho[i].item == item) {;
             (carrinho[i].quantidade += quantidade), (estoque -= quantidade)
@@ -78,7 +77,7 @@ finalizarCompra = () => {
     if (!carrinho.length) return alert('Não há nada no carrinho'), exibeMenu()
     else if (saldoUsuario >= totalProdutos) {
         saldoUsuario -= totalProdutos
-        return alert(`Compra realizada\n${exibeCarrinho()}\n${exibeSaldoUsuario()}`)
+        return alert(`Compra realizada\n${exibeCarrinho()}`)
     }
     alert(`Saldo insuficiente.${exibeCarrinho()}${exibeSaldoUsuario()}`),
         exibeMenu()
@@ -90,17 +89,17 @@ exibeMenu = () => {
     switch (opcao) {
         case 1:
             {
-                escolherItem(carrinho)
+                escolherItem()
                 break
             }
         case 2:
             {
-                log(exibeProdutos())
+                alert('Produtos disponiveis:\n' + exibeItens()),
+                exibeMenu()
                 break
             }
         case 3:
             {
-                exibeCarrinho()
                 removerItem()
                 break
             }
@@ -116,9 +115,7 @@ exibeMenu = () => {
             }
     }
 }
-setTimeout(() => {
-    exibeMenu()
-}, 1500)
+setTimeout(() => exibeMenu(), 1500)
 
 //Seção de Compras
 // function preCompra(valorProduto, itemQuantidade, i, item) {
