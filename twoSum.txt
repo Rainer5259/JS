@@ -1,0 +1,11 @@
+var twoSum = function(nums, target, sum) {
+    nums = [2, 7, 5, 11, 15], target = 9
+    for(let i = 0; i < nums.length; i++){
+    for(let j = 0; j < nums.length; j++){
+        if(nums[i] + nums[j] == target) {
+            sum = [i,j]
+            return console.log(sum, nums[i], nums[j], nums[i] + nums[j] )
+        }
+      }
+    }
+}
