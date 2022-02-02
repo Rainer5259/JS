@@ -28,49 +28,58 @@ const catalogo = [
     '6 - Sair sem comprar'
 ]
 
-exibeItens = () => produtos.map(value => `\n${value.item} - R$: ${value.valor}`)
-
 exibeSaldoUsuario = () => 'Seu saldo: R$' + saldoUsuario
 
-exibeCarrinho = () => carrinho.map(value => value.item + ' R$: ' + value.valor)
+exibeItens = () =>
+    produtos.map(
+        (value, index) =>
+        `\n${index} - ${value.item} - R$: ${value.valor} | No Estoque: ${value.estoque}`
+    )
 
-recebeVar = valor => (valor = parseInt(prompt(valor)))
+exibeCarrinho = () =>
+    carrinho.map(
+        (value, index) =>
+        `\n${index} - ${value.item} R$: ${value.valor} Un: ${value.quantidade}`
+    )
+
+recebeInt = valor => (valor = parseInt(prompt(valor)))
 
 escolherItem = (i, item, estoque, valor, quantidade) => {
-    i = recebeVar('Produtos Disponíveis:\n' + exibeItens())
+    i = recebeInt('Produtos Disponíveis:\n' + exibeItens())
     if (i > produtos.length) return exibeMenu()
     quantidade = parseInt(prompt('Quantidade'));
     (item = produtos[i].item), (valor = produtos[i].valor);
     (estoque = produtos[i].estoque), (totalProdutos += valor * quantidade)
-    if (quantidade > estoque) return alert('Estoque disponível:', estoque)
-    for (let i = 0; i < carrinho.length; i++) {
-        if (carrinho[i].item == item) {;
-            (carrinho[i].quantidade += quantidade), (estoque -= quantidade)
-            return exibeMenu()
+    if (quantidade <= estoque) {
+        produtos[i].estoque -= quantidade
+        for (let i = 0; i < carrinho.length; i++) {
+            if (carrinho[i].item == item) {
+                carrinho[i].quantidade += quantidade
+                return exibeMenu()
+            }
         }
+        carrinho.push({ item, valor, quantidade })
+        return exibeMenu()
     }
-    carrinho.push({ item, valor, quantidade }), (estoque -= quantidade)
-    exibeMenu()
+    return alert('Em estoque:', estoque), exibeMenu()
 }
 
-removerItem = (i, quantidade, quantidadeCarrinho) => {
-    if (!carrinho.length) return alert('O Carrinho está Vazio.'), exibeMenu()
-    i = recebeVar('Carrinho:\n' + exibeCarrinho() + '\nTotal R$:' + totalProdutos)
-    quantidade = recebeVar('Quantidade')
-    quantidadeCarrinho = carrinho[i].quantidade
-    while (quantidade > quantidadeCarrinho) {
-        quantidadeCarrinho = quantidadeCarrinho
-        alert('Item:', carrinho[i]), (quantidade = parseInt(prompt('Quantidade')))
+removerItem = (i, quantidade) => {
+    if (!carrinho.length) return alert('O Carrinho está Vazio.'), exibeMenu() //Se não houver nada no carrinho
+    i = recebeInt('Carrinho:\n' + exibeCarrinho() + '\nTotal R$:' + totalProdutos) //i - índice
+    let quantidadeItem = carrinho[i].quantidade
+    quantidade = recebeInt('Quantidade')
+    while (quantidade > quantidadeItem) {
+        alert(exibeCarrinho()), (quantidade = parseInt(prompt('Quantidade')))
     }
-    for (let j = 1; j < produtos.length; j++) {
-        if (produtos[j].item == carrinho[i].item) {;
-            (quantidadeCarrinho -= quantidade), (produtos[j].estoque += quantidade);
-            (quantidade *= carrinho[i].valor), (totalProdutos -= quantidade)
+    produtos.map(value => {
+        if (carrinho[i].item == value.item) {
+            carrinho[i].quantidade -= quantidade
+            value.estoque += quantidade
+            return (totalProdutos -= quantidade * carrinho[i].valor)
         }
-        alert(exibeCarrinho(), exibeMenu())
-    }
-    exibeCarrinho()
-    if (quantidadeCarrinho == 0) return carrinho.splice(i, 1), exibeMenu()
+    })
+    if (carrinho[i].quantidade == 0) return carrinho.splice(i, 1), exibeMenu() //A quantidade do item selecionado no carrrinho for igual a 0, o array é removido.
 }
 
 finalizarCompra = () => {
@@ -79,12 +88,11 @@ finalizarCompra = () => {
         saldoUsuario -= totalProdutos
         return alert(`Compra realizada\n${exibeCarrinho()}`)
     }
-    alert(`Saldo insuficiente.${exibeCarrinho()}${exibeSaldoUsuario()}`),
-        exibeMenu()
+    alert(`Saldo pouco! ${exibeSaldoUsuario()}\n${exibeCarrinho()}`), exibeMenu()
 }
 
 exibeMenu = () => {
-    let opcao = recebeVar(catalogo)
+    let opcao = recebeInt(catalogo)
     while (opcao < 1 || opcao > 5) return alert('Opção inexistente'), exibeMenu()
     switch (opcao) {
         case 1:
